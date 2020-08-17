@@ -11,6 +11,7 @@ public:
     void set_lower_coeff(int, int, double const &);
     double get_coeff(int, int);
     void factoLU(void);
+    void solve(double*, double*);
     void print(void);
 
 private:

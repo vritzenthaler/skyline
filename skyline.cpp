@@ -20,9 +20,8 @@ Skyline::Skyline(int dim){
         m_u_coeff[i] = 0.;
         m_l_coeff[i] = 0.;
     }
-    cout << "index = ";
+
     for(i=0; i<dim+1; i++){
-        cout << i << " ";
         m_u_index[i] = i;
         m_l_index[i] = i;
     }
@@ -169,6 +168,26 @@ void Skyline::factoLU(void){
                 (*this).set_coeff(j,i, (*this).get_coeff(j,i)-(*this).get_coeff(j,k)*(*this).get_coeff(k,i));
             }
         }
+    }
+}
+
+void Skyline::solve(double* x, double* b){
+    double* y = new double[m_dim];
+
+    int i,j;
+    for(i=0; i<m_dim; i++){
+        y[i] = b[i];
+        for(j=0; j<i; j++){
+            y[i] -= (*this).get_coeff(i,j)*y[j];
+        }
+    }
+
+    for(i=m_dim-1; i>=0; i--){
+        x[i] = y[i];
+        for(j=m_dim-1; j>i; j--){
+            x[i] -= (*this).get_coeff(i,j)*x[j];
+        }
+        x[i] /= (*this).get_coeff(i,i);
     }
 }
 
