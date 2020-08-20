@@ -28,8 +28,11 @@ Skyline::Skyline(int dim){
     cout << endl;
 }
 
+int call = 0;
+
 void Skyline::set_upper_coeff(int i, int j, double const &val){
-    if(((j-i)>(m_l_index[j+1]-m_l_index[j]))&&(val==0)){
+    if(((j-i)>=(m_l_index[j+1]-m_l_index[j]))&&(val==0)){
+        call += 1;
         return;
     }
 
@@ -73,7 +76,8 @@ void Skyline::set_upper_coeff(int i, int j, double const &val){
 }
 
 void Skyline::set_lower_coeff(int i, int j, double const &val){
-    if(((j-i)>(m_l_index[j+1]-m_l_index[j]))&&(val==0)){
+    if(((j-i)>=(m_l_index[j+1]-m_l_index[j]))&&(val==0)){
+        call += 1;
         return;
     }
 
@@ -88,7 +92,7 @@ void Skyline::set_lower_coeff(int i, int j, double const &val){
 
             double *new_coeff = new double[m_l_coeff_size];
 
-            int k, idx, d=0;
+            int k, idx;
 
             for(k=0; k<j; k++){
                 for(idx=m_l_index[k]; idx<m_l_index[k+1]; idx++){
@@ -134,7 +138,6 @@ void Skyline::set_coeff(int i, int j, double const &val){
 double Skyline::get_coeff(int i, int j){
     int* m_index = m_u_index;
     double* m_coeff = m_u_coeff;
-    int m_coeff_size = m_u_coeff_size;
 
     if(i>j){
         int tmp = j;
@@ -142,7 +145,6 @@ double Skyline::get_coeff(int i, int j){
         i = tmp;
         m_index = m_l_index;
         m_coeff = m_l_coeff;
-        m_coeff_size = m_l_coeff_size;
     }
 
     if((j-i)>=(m_index[j+1]-m_index[j])){
@@ -155,6 +157,9 @@ double Skyline::get_coeff(int i, int j){
 void Skyline::factoLU(void){
     int i,j,k;
     double piv;
+
+    cout << "m_coeff_size upper = " << m_u_coeff_size << endl;
+    cout << "m_coeff_size lower = " << m_l_coeff_size << endl;
 
     for(k=0; k<m_dim; k++){
         for(j=k+1; j<m_dim; j++){
@@ -169,6 +174,9 @@ void Skyline::factoLU(void){
             }
         }
     }
+    cout << "m_coeff_size upper = " << m_u_coeff_size << endl;
+    cout << "m_coeff_size lower = " << m_l_coeff_size << endl;
+    cout << "call = " << call << endl;
 }
 
 void Skyline::solve(double* x, double* b){
